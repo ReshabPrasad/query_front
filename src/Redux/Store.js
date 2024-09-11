@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import authSliceReducer from '../Redux/Slices/AuthSlice';
-import questionliceReducer from '../Redux/Slices/QuestionSlice'
+import questionsliceReducer from '../Redux/Slices/QuestionSlice'
+import answersliceReducer from '../Redux/Slices/AnswerSlice'
 
 
 const store = configureStore({
     reducer:{
         auth:authSliceReducer,
-        ques:questionliceReducer
+        ques:questionsliceReducer,
+        ans:answersliceReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}),
     devTools: true

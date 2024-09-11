@@ -3,6 +3,7 @@ import HomeLayout from "../../Layout/HomeLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { createquestion, loadquestions } from "../../Redux/Slices/QuestionSlice";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 
 
@@ -31,6 +32,10 @@ function CreateQuestion() {
      function submitdetails(e){
        e.preventDefault();
        dispatch(createquestion(details));
+       if(!details.title || !details.description){
+        toast.error("Please enter the title and Description");
+        return;
+       }
        if(details){
         dispatch(loadquestions());
         navigate('/');
@@ -38,10 +43,12 @@ function CreateQuestion() {
        console.log(details);
      }
 
+
+     
     return (
         <HomeLayout> 
-                <div className="flex justify-center ">
-                <form 
+                <div className="flex justify-center w-[100vw] h-[95vh] items-center">
+                <div 
                     className="h-[75%] w-[35rem] border bg-[#003840] p-10 border-sky-500 rounded-lg hover:bg-sky-900 transition-all ease-in-out duration-300"
                 >
 
@@ -49,7 +56,7 @@ function CreateQuestion() {
                         Create question
                     </h1>
 
-                    <div className="form-control w-full">
+                    <div className="w-full">
                         <label className="label">
                             <span className="label-text text-white text-lg" >What is the title of the question?</span>
                         </label>
@@ -62,7 +69,7 @@ function CreateQuestion() {
                         className="input input-bordered input-primary w-full bg-white text-black" />
                     </div>
 
-                    <div className="form-control w-full">
+                    <div className=" w-full">
                         <label className="label">
                             <span className="label-text text-white text-lg">Description of the question</span>
                         </label>
@@ -81,7 +88,7 @@ function CreateQuestion() {
                         Submit
                     </button>
 
-                </form>
+                </div>
                 </div>
         </HomeLayout>
     );

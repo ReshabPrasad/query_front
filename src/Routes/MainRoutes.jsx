@@ -5,6 +5,7 @@ import Home from "../pages/Home/Home";
 import Profile from "../pages/Profile/Profile";
 import CreateQuestion from "../pages/Questions/CreateQuestion";
 import User from '../pages/Users/Users'
+import CreateAnswer from "../pages/Answer/CreateAnswer";
 
 function MainRoutes(){
     return(
@@ -15,6 +16,7 @@ function MainRoutes(){
             <Route path ='/profile' element = {<Profile/>}/>
             <Route path ='/question' element = {<CreateQuestion/>}/>
             <Route path ='/users' element = {<User/>}/>
+            <Route path ='/answer' element = {<CreateAnswer/>}/>
         </Routes>
     )
 }

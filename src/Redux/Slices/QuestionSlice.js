@@ -18,12 +18,11 @@ export const loadquestions = createAsyncThunk('.question', async (data) => {
             }
         )
         console.log(details);
-        if(details)
-        //toast.success("Questions loaded");
+        if(!details)
+        toast.error("No questions available");
         return details;
     } catch (error) {
         console.error(error);
-        toast.error("Server error");
         return undefined;
     }
 });
@@ -41,6 +40,23 @@ export const createquestion  = createAsyncThunk('question',async(data)=> {
         console.log(details);
     } catch (error) {
         console.log(error);
+    }
+})
+
+export const updateQuestion = createAsyncThunk('update' , async({id , data}) => {
+    try {
+        console.log('Sai', data)
+        const details  = await axiosInstance.put(`/question/${id}` ,data ,{
+            headers : {
+                'x-access-token' : localStorage.getItem('token')
+            }
+        })
+        if(details){
+            console.log(details);
+            return details;
+        }
+    } catch (error) {
+        console.log('Dealer', error);
     }
 })
 

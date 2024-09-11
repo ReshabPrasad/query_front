@@ -8,6 +8,8 @@ import { userlist } from "../../Redux/Slices/AuthSlice";
 import { useEffect } from "react";
 import { RiAddCircleFill } from "react-icons/ri";
 import { useNavigate } from "react-router";
+import { loadanswers } from "../../Redux/Slices/AnswerSlice";
+import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 
 function Home() {
    const dispatch = useDispatch();
@@ -16,20 +18,25 @@ function Home() {
    const navigate = useNavigate();
 
    useEffect(()=>{
+    if((!userstate.isLoggedIn)){
+      navigate('/login');
+      return;
+     }
    dispatch(loadquestions());
    dispatch(userlist());
+   dispatch(loadanswers());
    },[queState.ques])
-
-    
+   
    function create(){
     navigate('/question')
    }
   return (
         <HomeLayout>
           <div className="flex justify-center mt-10">
+
         <div className="flex flex-col ">
        {queState.question.map((question,key) => {
-         return (<Card key={key} userId = {question.userId} title = {question.title} description = {question.description} date = {question.createdAt} questionId = {question._id}/>)
+         return (<Card key={key} userId = {question.userId} title = {question.title} description = {question.description} date = {question.createdAt} questionId = {question._id} likes={question.likes} />)
        })}
        </div>
        </div>

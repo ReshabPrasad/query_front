@@ -52,7 +52,6 @@ export const userlist = createAsyncThunk('/auth',async() => {
         if(users) //toast.success("Loaded all users");
         return users;
     } catch (error) {
-        toast.error("Internal Server Error");
         return undefined;
     }
 })
@@ -60,7 +59,16 @@ export const userlist = createAsyncThunk('/auth',async() => {
 const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+        logout:(state) =>{
+            localStorage.clear(),
+            state.token='',
+            state.isLoggedIn=false,
+            state.data=undefined;
+            
+
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(login.fulfilled, (state, action) => {
             if (!action.payload) return;
@@ -78,4 +86,5 @@ const authSlice = createSlice({
     }
 });
 
+export const {logout} = authSlice.actions
 export default authSlice.reducer;

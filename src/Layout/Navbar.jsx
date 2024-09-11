@@ -1,65 +1,97 @@
 import React, { useState } from 'react';
-import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { AiOutlineMenu } from 'react-icons/ai';
+import { FaUserCircle } from 'react-icons/fa'; // Profile Icon
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { logout } from '../Redux/Slices/AuthSlice';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
 const Navbar = ({ children }) => {
-  // State to manage the navbar's visibility
-  const [nav, setNav] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // Toggle function to handle the navbar's display
-  const handleNav = () => {
-    setNav(!nav);
+  // Logout function
+  const logout1 = () => {
+    dispatch(logout());
+    navigate('/login');
   };
 
-  // Array containing navigation items
-  const navItems = [
-    { id: 1, text: 'Home', link: '/' },
-    { id: 2, text: 'Users', link: '/users' },
-    { id: 3, text: 'Explore', link: '/explore' },
-    { id: 4, text: 'Profile', link: '/profile' },
-  ];
+  // Open drawer
+  const [isOpen,setIsOpen] = useState(false);
+
 
   return (
     <>
-      <div className='bg-[#024959] flex justify-between items-center h-15 max-w-full px-4 text-white w-full fixed shadow-xl'>
+      <div className="bg-[#024959] flex justify-between items-center h-15 max-w-full px-4 text-white w-full fixed shadow-xl z-[100]">
         {/* Logo */}
-        <h1 className='w-full text-xl font-bold text-[#9FC131]'>Querify</h1>
+        <h1 className="w-full text-xl font-bold text-[#9FC131]">Querify</h1>
 
         {/* Desktop Navigation */}
-        <ul className='hidden md:flex'>
-          {navItems.map((item) => (
-            <li key={item.id} className='p-4 hover:bg-[#026773] text-[#6fffff]'>
-              <Link to={item.link}>{item.text}</Link>
-            </li>
-          ))}
+        <ul className="hidden md:flex">
+          <li className="p-4 hover:bg-[#026773] text-[#6FFFFF]">
+            <Link to="/">Home</Link>
+          </li>
+          <li className="p-4 hover:bg-[#026773] text-[#6FFFFF]">
+            <Link to="/users">Users</Link>
+          </li>
+          <li className="p-4 hover:bg-[#026773] text-[#6FFFFF]">
+            <Link to="/explore">Explore</Link>
+          </li>
         </ul>
 
         {/* Mobile Navigation Icon */}
-        <div onClick={handleNav} className='block md:hidden'>
-          {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
+        <div className="block md:hidden">
+          <AiOutlineMenu size={20} />
         </div>
 
-        {/* Mobile Navigation Menu */}
-        <ul
-          className={
-            nav
-              ? 'fixed md:hidden left-0 top-0 w-[60%] h-full border-r border-r-gray-900 bg-[#000300] ease-in-out duration-500'
-              : 'ease-in-out w-[60%] duration-500 fixed top-0 bottom-0 left-[-100%]'
-          }
+        {/* Profile Icon and Drawer */}
+        <div
+          
         >
-          {/* Mobile Logo */}
-          <h1 className='w-full text-3xl font-bold text-white m-4'>Querify</h1>
+          <div className="relative inline-block text-left z-[0]" >
+                            <div>
+                                <button
+                                onClick={() => setIsOpen(!isOpen)}
+                                className="inline-flex justify-center w-full shadow-sm px-4 py-2 focus:outline-none"
+                                >
+                                <BsThreeDotsVertical className="h-8 w-8 p-2 rounded-full hover:bg-gray-950" />
+                                </button>
+                            </div>
 
-          {/* Mobile Navigation Items */}
-          {navItems.map((item) => (
-            <li key={item.id} className='p-4 rounded-xl text-white'>
-              <Link to={item.link}>{item.text}</Link>
-            </li>
-          ))}
-        </ul>
+                            {isOpen && (
+                                <div
+                                className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 focus:outline-none z-10"
+                                role="menu"
+                                aria-orientation="vertical"
+                                aria-labelledby="menu-button"
+                                tabIndex="-1"
+                                >
+                                    <div className="py-1" role="none">
+                                        <h2
+                                            className="block px-4 py-2 text-sm text-white font-semibold hover:cursor-pointer"
+                                            role="menuitem"
+                                            tabIndex="-1"
+                                        >
+                                        Profile
+                                        </h2>
+                                        <h2
+                                            className="block px-4 py-2 text-sm text-white font-semibold hover:cursor-pointer"
+                                            role="menuitem"
+                                            tabIndex="-1"
+                                            onClick={logout1}
+                                        >
+                                        Logout
+                                        </h2>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+        </div>
       </div>
 
-      <div className='flex p-4 justify-center'>{children}</div>
+      {/* Main content */}
+      <div className="flex p-4 justify-center">{children}</div>
     </>
   );
 };
