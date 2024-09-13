@@ -50,6 +50,14 @@ function CreateAnswer() {
     })
   }
 
+  function resetDetails(){
+    setDetails ({
+    user_id :  userstate.data._id,
+    question_id : questionId,
+    description : ""
+    })
+  }
+  
   async function submitAnswer(){
     console.log(details);
     const response = await dispatch(createanswer(details));
@@ -59,6 +67,7 @@ function CreateAnswer() {
     }else{
         toast.error("Something went wrong Please try again")
     }
+    resetDetails();
   }
 
   

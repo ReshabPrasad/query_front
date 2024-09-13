@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AiOutlineLike, AiOutlinePlus } from "react-icons/ai"; // Like and Add icons
-import { FaRegComment, FaRegThumbsUp, FaThumbsUp } from "react-icons/fa"; // Comment icon
+import { AiOutlineLike, AiOutlinePlus } from "react-icons/ai"; 
+import { FaRegComment, FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { loadquestions, updateQuestion } from "../Redux/Slices/QuestionSlice";
+import { deleteQuestion, loadquestions, updateQuestion } from "../Redux/Slices/QuestionSlice";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 function Card({ userId, title, description, date, questionId ,likes }) {
     const [name, setName] = useState("");
@@ -12,9 +13,10 @@ function Card({ userId, title, description, date, questionId ,likes }) {
     const queState  = useSelector((state) => state.ques);
     const dispatch = useDispatch();
     const [like,setLike] = useState(false);
+    const [open,setOpen] = useState(false);
+    const [follow,setFollow] = useState(true);
 
-    useEffect(() => {
-        // Get user name based on userId
+    useEffect(() =>{
         userstate.users.forEach((user) => {
             if (user._id === userId) {
                 setName(user.name);
@@ -25,11 +27,14 @@ function Card({ userId, title, description, date, questionId ,likes }) {
                 setLike(true);
             }
          })
+         if(userId===userstate.data._id){
+            setFollow(false);
+         }
     }, [userstate.users, userId]);
 
 
     function createanswer(){
-        navigate(`/answer?question_id=${questionId}`)
+        navigate(`/Createanswer?question_id=${questionId}`)
     }
 
     async function UpdateQuestion(){
@@ -46,6 +51,22 @@ function Card({ userId, title, description, date, questionId ,likes }) {
         }
     }
 
+    function change(){
+        setOpen(!open)
+    }
+    
+    async function deleteQue(){
+        const response = await dispatch(deleteQuestion(questionId));
+        if(response){
+            dispatch(loadquestions());
+        }
+        setOpen(!open)
+    }
+
+    function ShowAnswer(){
+        navigate(`/answer/?question_id=${questionId}`)
+    }
+
     return (
         <div className="w-[35rem] p-6 my-2 break-inside hover:shadow-2xl bg-[#176a7d] rounded-lg shadow">
             <div className="flex gap-3">
@@ -54,12 +75,57 @@ function Card({ userId, title, description, date, questionId ,likes }) {
                     src="https://cdn5.vectorstock.com/i/1000x1000/43/04/avatar-social-media-isolated-icon-design-vector-10704304.jpg"
                     alt="User Avatar"
                 />
-                <div>
-                    <div className="flex gap-2 items-center">
-                        <h1 className="text-lg font-semibold">{name}</h1>
-                        <h2 className="text-[#9FC131] cursor-pointer">Follow</h2>
+                <div className="flex justify-between w-full">
+                    <div>
+                        <div className="flex gap-2 items-center">
+                            <h1 className="text-lg font-semibold">{name}</h1>
+                            {follow && <h2 
+                            className="text-[#9FC131] cursor-pointer"
+                            onClick={follow}
+                            >Follow</h2>}
+                        </div>
+                        <h2 className="text-sm text-gray-400">{date?.split('T')[0].split('-').reverse().join("-")}</h2>
                     </div>
-                    <h2 className="text-sm text-gray-400">{date?.split('T')[0].split('-').reverse().join("-")}</h2>
+                    <div className="relative inline-block text-left z-[0]" >
+                            <div>
+                                <button
+                                className="inline-flex justify-center w-full shadow-sm px-4 py-2 focus:outline-none"
+                                >
+                                <BsThreeDotsVertical onClick = {change}  className="h-8 w-8 p-2 rounded-full hover:bg-gray-950" />
+                                </button>
+                            </div>
+
+                                {open && <div
+                                className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 focus:outline-none z-10"
+                                role="menu"
+                                aria-orientation="vertical"
+                                aria-labelledby="menu-button"
+                                tabIndex="-1"
+                                >
+                                    <div className="py-1" role="none">
+                                        <h2
+                                            className="block px-4 py-2 text-sm text-white hover:bg-gray-700 font-semibold hover:cursor-pointer"
+                                            role="menuitem"
+                                            tabIndex="-1"
+                                            onClick={ShowAnswer}
+                                        >
+                                        View Answers
+                                        </h2>
+                                        
+                                        {(userId===userstate.data._id) && <h2
+                                            className="block px-4 py-2 text-sm text-white hover:bg-gray-600 font-semibold"
+                                            role="menuitem"
+                                            tabIndex="-1" 
+                                            onClick = {deleteQue}
+                                            >
+                                            
+                                        Delete 
+                                        </h2>}
+                                    </div>
+                                </div>
+                            } 
+                            
+                        </div>
                 </div>
             </div>
             <div className="w-full">

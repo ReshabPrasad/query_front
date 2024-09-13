@@ -48,6 +48,25 @@ export const loadanswers = createAsyncThunk('.answer', async (data) => {
 });
 
 
+export const updateAnswer = createAsyncThunk('update' , async({id , data}) => {
+    try {
+        console.log("hello " ,id,data)
+        const details  = await axiosInstance.put(`/answer/${id}`,data ,{
+            headers : {
+                'x-access-token' : localStorage.getItem('token')
+            }
+        })
+        if(details){
+            console.log(details);
+            return details;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
+
 
 
 const answerSlice = createSlice({

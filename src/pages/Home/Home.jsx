@@ -28,7 +28,7 @@ function Home() {
    },[queState.ques])
    
    function create(){
-    navigate('/question')
+    navigate('/Createquestion')
    }
   return (
         <HomeLayout>

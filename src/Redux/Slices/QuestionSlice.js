@@ -60,6 +60,25 @@ export const updateQuestion = createAsyncThunk('update' , async({id , data}) => 
     }
 })
 
+export const deleteQuestion = createAsyncThunk('delete' , async(id) => {
+    try {
+        console.log("id",id);
+        const response = await axiosInstance.delete(`/question/${id}`,{
+            headers : {
+                'x-access-token' : localStorage.getItem('token')
+            }
+        })
+        console.log("response",response);
+        if(response){
+            toast.success("Succesfully deleted the question");
+            return response;
+        }
+        toast.error("Something went wrong Pls try again")
+    } catch (error) {
+        console,log(error);
+    }
+})
+
 const questionSlice = createSlice({
     name: 'ques',
     initialState,
