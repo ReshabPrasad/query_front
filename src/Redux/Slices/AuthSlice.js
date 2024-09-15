@@ -56,6 +56,16 @@ export const userlist = createAsyncThunk('/auth',async() => {
     }
 })
 
+export const followUsers = createAsyncThunk('/follow' , async({id,data}) => {
+    try {
+        const response = await axiosInstance.post(`/auth/follow/${id}` , data ) ;
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,

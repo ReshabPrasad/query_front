@@ -5,6 +5,7 @@ import { FaRegComment, FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { deleteQuestion, loadquestions, updateQuestion } from "../Redux/Slices/QuestionSlice";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { followUsers, userlist } from "../Redux/Slices/AuthSlice";
 
 function Card({ userId, title, description, date, questionId ,likes }) {
     const [name, setName] = useState("");
@@ -14,7 +15,7 @@ function Card({ userId, title, description, date, questionId ,likes }) {
     const dispatch = useDispatch();
     const [like,setLike] = useState(false);
     const [open,setOpen] = useState(false);
-    const [follow,setFollow] = useState(true);
+    const [follow,setFollow] = useState(false);
 
     useEffect(() =>{
         userstate.users.forEach((user) => {
@@ -54,6 +55,35 @@ function Card({ userId, title, description, date, questionId ,likes }) {
     function change(){
         setOpen(!open)
     }
+
+    async function Follow(){
+        const res = await dispatch(followUsers({
+            id : userstate.data._id ,
+            data : {
+                user_id : userId
+            }
+        }))
+        if(res){
+            setFollow(!follow);
+            location.reload()
+            console.log(res);
+        }
+    }
+
+    async function checkFollow(){
+        const res = await dispatch(userlist());
+        const res1 = await dispatch(loadquestions());
+            userstate.users.filter((users) => users._id===userstate.data._id)[0]?.following.map((id) => {
+               if(id===userId){
+                   setFollow(true);
+               }
+            })
+            console.log(follow)
+    }
+
+    useEffect(() => {
+        checkFollow();
+    },[userstate.users?.length]);
     
     async function deleteQue(){
         const response = await dispatch(deleteQuestion(questionId));
@@ -79,11 +109,17 @@ function Card({ userId, title, description, date, questionId ,likes }) {
                     <div>
                         <div className="flex gap-2 items-center">
                             <h1 className="text-lg font-semibold">{name}</h1>
-                            {follow && <h2 
+                            {!follow ? <h2 
                             className="text-[#9FC131] cursor-pointer"
-                            onClick={follow}
-                            >Follow</h2>}
+                            onClick={Follow}
+                            >Follow</h2>: 
+                            <h2 
+                            className="text-[#9FC131] cursor-pointer"
+                            onClick={Follow}
+                            >Following</h2> 
+                            }
                         </div>
+                        
                         <h2 className="text-sm text-gray-400">{date?.split('T')[0].split('-').reverse().join("-")}</h2>
                     </div>
                     <div className="relative inline-block text-left z-[0]" >

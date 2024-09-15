@@ -86,7 +86,7 @@ const questionSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(loadquestions.fulfilled, (state, action) => {
             console.log("Hello");
-            state.question = action.payload.data.questions.reverse();
+            state.question = action.payload?.data?.questions.reverse();
         });
     }
 });

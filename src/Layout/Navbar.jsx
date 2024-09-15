@@ -17,6 +17,10 @@ const Navbar = ({ children }) => {
     navigate('/login');
   };
 
+  function profile(){
+    navigate('/profile')
+  }
+
   // Open drawer
   const [isOpen,setIsOpen] = useState(false);
 
@@ -72,6 +76,7 @@ const Navbar = ({ children }) => {
                                             className="block px-4 py-2 text-sm text-white font-semibold hover:cursor-pointer"
                                             role="menuitem"
                                             tabIndex="-1"
+                                            onClick = {profile}
                                         >
                                         Profile
                                         </h2>
